@@ -94,24 +94,24 @@ class DashboardScreen extends StatelessWidget {
                 
                 return Column(
                   children: [
-                    _buildStatCard(context, 'Staf', stats['Staf'] ?? 0, const Color(0xFF1E3A8A)),
+                    _buildStatCard(context, 'Staf', stats['Staf'] ?? 0, const Color(0xFF3B82F6)),
                     const SizedBox(height: 12),
-                    _buildStatCard(context, 'Ka. TU', stats['Ka. TU'] ?? 0, const Color(0xFF4C1D95)),
+                    _buildStatCard(context, 'Ka. TU', stats['Ka. TU'] ?? 0, const Color(0xFF8B5CF6)),
                     const SizedBox(height: 12),
-                    _buildStatCard(context, 'Kabag', stats['Kabag'] ?? 0, const Color(0xFF0F766E)),
+                    _buildStatCard(context, 'Kabag', stats['Kabag'] ?? 0, const Color(0xFF14B8A6)),
                     const SizedBox(height: 12),
                     _buildStatCard(
                       context,
                       'Waka Bendahara',
                       stats['Waka Bendahara'] ?? 0,
-                      const Color(0xFFC2410C),
+                      const Color(0xFFF97316),
                     ),
                     const SizedBox(height: 12),
                     _buildStatCard(
                       context,
                       'Bendahara',
                       stats['Bendahara'] ?? 0,
-                      const Color(0xFFBE123C),
+                      const Color(0xFFF43F5E),
                     ),
                   ],
                 );
