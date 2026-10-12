@@ -52,7 +52,6 @@ class RekapScreen extends StatelessWidget {
           );
         }
 
-        final summary = stats.summary;
         final rekapBulanList = stats.rekapBulan;
         final trendLabels = stats.chartTrenBulanan['labels'] as List? ?? [];
         final trendValues = stats.chartTrenBulanan['values'] as List? ?? [];
@@ -65,61 +64,6 @@ class RekapScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Ringkasan Status Grid
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        'Total Surat',
-                        '${summary['total_surat'] ?? 0}',
-                        Icons.mark_email_read_outlined,
-                        isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E),
-                        isDark ? const Color(0xFF2DD4BF).withValues(alpha: 0.15) : const Color(0xFFE6FFFA),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        'Belum Diproses',
-                        '${summary['belum_diproses'] ?? 0}',
-                        Icons.hourglass_empty_rounded,
-                        const Color(0xFFF59E0B),
-                        isDark ? const Color(0xFFF59E0B).withValues(alpha: 0.15) : const Color(0xFFFEF3C7),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        'Sedang Diproses',
-                        '${summary['sedang_diproses'] ?? 0}',
-                        Icons.sync_rounded,
-                        const Color(0xFF3B82F6),
-                        isDark ? const Color(0xFF3B82F6).withValues(alpha: 0.15) : const Color(0xFFDBEAFE),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildSummaryCard(
-                        context,
-                        'Selesai',
-                        '${summary['selesai'] ?? 0}',
-                        Icons.check_circle_outline_rounded,
-                        const Color(0xFF10B981),
-                        isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFD1FAE5),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 28),
-
                 // Tren Bulanan Chart Card
                 if (trendLabels.isNotEmpty && trendValues.isNotEmpty) ...[
                   Text(
@@ -350,73 +294,6 @@ class RekapScreen extends StatelessWidget {
           ),
         );
       }),
-    );
-  }
-
-  Widget _buildSummaryCard(
-    BuildContext context,
-    String title,
-    String count,
-    IconData icon,
-    Color color,
-    Color bgColor,
-  ) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? Border.all(color: const Color(0xFF334155)) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  count,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
