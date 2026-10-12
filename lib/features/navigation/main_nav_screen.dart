@@ -51,7 +51,7 @@ class MainNavigationScreen extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 68,
+          height: 70,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,53 +154,57 @@ class MainNavigationScreen extends StatelessWidget {
       return GestureDetector(
         onTap: () => navCtrl.changePage(index),
         behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Transform.translate(
-              offset: const Offset(0, -14),
-              child: Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0F766E), Color(0xFF14B8A6)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF0F766E).withValues(alpha: isSelected ? 0.45 : 0.25),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+        child: SizedBox(
+          width: 72,
+          height: 70,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                top: -16,
+                child: Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF0F766E), Color(0xFF14B8A6)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  ],
-                  border: Border.all(
-                    color: theme.cardColor,
-                    width: 3.5,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF0F766E).withValues(alpha: isSelected ? 0.45 : 0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: theme.cardColor,
+                      width: 3.5,
+                    ),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 26,
                   ),
                 ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 26,
+              ),
+              Positioned(
+                bottom: 8,
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    color: isSelected ? activeColor : inactiveColor,
+                  ),
                 ),
               ),
-            ),
-            Transform.translate(
-              offset: const Offset(0, -10),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isSelected ? activeColor : inactiveColor,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });
