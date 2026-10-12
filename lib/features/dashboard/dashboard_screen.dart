@@ -77,42 +77,75 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 40),
-              Text(
-                'Posisi Surat Saat Ini',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF111827),
-                ),
-              ),
-              const SizedBox(height: 16),
               Obx(() {
-                if (controller.isLoadingStats.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                
                 final stats = controller.stats.value?.posisiSurat ?? {};
-                
+                final totalPosisi = (stats['Staf'] ?? 0) +
+                    (stats['Ka. TU'] ?? 0) +
+                    (stats['Kabag'] ?? 0) +
+                    (stats['Waka Bendahara'] ?? 0) +
+                    (stats['Bendahara'] ?? 0);
+
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStatCard(context, 'Staf', stats['Staf'] ?? 0, const Color(0xFF3B82F6)),
-                    const SizedBox(height: 12),
-                    _buildStatCard(context, 'Ka. TU', stats['Ka. TU'] ?? 0, const Color(0xFF8B5CF6)),
-                    const SizedBox(height: 12),
-                    _buildStatCard(context, 'Kabag', stats['Kabag'] ?? 0, const Color(0xFF14B8A6)),
-                    const SizedBox(height: 12),
-                    _buildStatCard(
-                      context,
-                      'Waka Bendahara',
-                      stats['Waka Bendahara'] ?? 0,
-                      const Color(0xFFF97316),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Posisi Surat Saat Ini',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF111827),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0F766E).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFF0F766E).withValues(alpha: 0.2),
+                            ),
+                          ),
+                          child: Text(
+                            'Total: $totalPosisi Berkas',
+                            style: const TextStyle(
+                              color: Color(0xFF0F766E),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    _buildStatCard(
-                      context,
-                      'Bendahara',
-                      stats['Bendahara'] ?? 0,
-                      const Color(0xFFF43F5E),
-                    ),
+                    const SizedBox(height: 16),
+                    if (controller.isLoadingStats.value)
+                      const Center(child: CircularProgressIndicator())
+                    else
+                      Column(
+                        children: [
+                          _buildStatCard(context, 'Staf', stats['Staf'] ?? 0, const Color(0xFF3B82F6)),
+                          const SizedBox(height: 12),
+                          _buildStatCard(context, 'Ka. TU', stats['Ka. TU'] ?? 0, const Color(0xFF8B5CF6)),
+                          const SizedBox(height: 12),
+                          _buildStatCard(context, 'Kabag', stats['Kabag'] ?? 0, const Color(0xFF14B8A6)),
+                          const SizedBox(height: 12),
+                          _buildStatCard(
+                            context,
+                            'Waka Bendahara',
+                            stats['Waka Bendahara'] ?? 0,
+                            const Color(0xFFF97316),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildStatCard(
+                            context,
+                            'Bendahara',
+                            stats['Bendahara'] ?? 0,
+                            const Color(0xFFF43F5E),
+                          ),
+                        ],
+                      ),
                   ],
                 );
               }),
