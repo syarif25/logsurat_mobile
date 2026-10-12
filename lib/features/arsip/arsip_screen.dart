@@ -71,9 +71,14 @@ class ArsipScreen extends StatelessWidget {
   }
 
   Widget _buildSuratCard(BuildContext context, SuratModel surat) {
+    String displayStatus = surat.status ?? '-';
+    if (displayStatus == 'Diteruskan') {
+      displayStatus = 'Proses';
+    }
+
     Color statusColor = Colors.orange;
-    if (surat.status == 'Finish') statusColor = Colors.green;
-    if (surat.status == 'Dikembalikan') statusColor = Colors.red;
+    if (displayStatus == 'Finish') statusColor = Colors.green;
+    if (displayStatus == 'Dikembalikan') statusColor = Colors.red;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -82,7 +87,7 @@ class ArsipScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -110,12 +115,12 @@ class ArsipScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: statusColor),
                       ),
                       child: Text(
-                        surat.status ?? '-',
+                        displayStatus,
                         style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -297,7 +302,7 @@ class ArsipScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 3),
                   boxShadow: [
-                    BoxShadow(color: badgeColor.withOpacity(0.5), blurRadius: 4),
+                    BoxShadow(color: badgeColor.withValues(alpha: 0.5), blurRadius: 4),
                   ],
                 ),
               ),

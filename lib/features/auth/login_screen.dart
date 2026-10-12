@@ -14,35 +14,58 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _login() async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       Get.snackbar(
         'Peringatan', 
         'Email dan password tidak boleh kosong',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange.withOpacity(0.8),
+        backgroundColor: Colors.orange.withValues(alpha: 0.8),
         colorText: Colors.white,
       );
       return;
     }
 
     setState(() => _isLoading = true);
-    final authService = Get.find<AuthService>();
-    final errorMsg = await authService.login(
-      _usernameController.text,
-      _passwordController.text,
-    );
+    try {
+      final authService = Get.find<AuthService>();
+      final errorMsg = await authService.login(
+        _usernameController.text.trim(),
+        _passwordController.text,
+      );
 
-    if (errorMsg == null) {
-      Get.offNamed('/dashboard');
-    } else {
+      if (errorMsg == null) {
+        Get.offNamed('/dashboard');
+      } else {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+        Get.snackbar(
+          'Login Gagal', 
+          errorMsg,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withValues(alpha: 0.8),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
       Get.snackbar(
-        'Login Gagal', 
-        errorMsg,
+        'Terjadi Kesalahan',
+        e.toString(),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red.withValues(alpha: 0.8),
         colorText: Colors.white,
-        duration: const Duration(seconds: 4),
       );
     }
   }
@@ -123,17 +146,17 @@ class _BlobPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // Layer Bawah (Lavender / Keunguan lembut)
     final paint1 = Paint()
-      ..color = const Color(0xFFC8C4E6).withOpacity(0.9)
+      ..color = const Color(0xFFC8C4E6).withValues(alpha: 0.9)
       ..style = PaintingStyle.fill;
 
     // Layer Atas (Muted Teal / Biru Tosca pudar)
     final paint2 = Paint()
-      ..color = const Color(0xFF5CA2B8).withOpacity(0.95)
+      ..color = const Color(0xFF5CA2B8).withValues(alpha: 0.95)
       ..style = PaintingStyle.fill;
 
     // Highlight Hijau (kiri/bawah blob)
     final paint3 = Paint()
-      ..color = const Color(0xFF6BC8B0).withOpacity(0.9)
+      ..color = const Color(0xFF6BC8B0).withValues(alpha: 0.9)
       ..style = PaintingStyle.fill;
 
     final path1 = Path();

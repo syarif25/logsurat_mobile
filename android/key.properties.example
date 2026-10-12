@@ -1,0 +1,7 @@
+# Contoh konfigurasi Release Keystore Android
+# Salin file ini menjadi 'android/key.properties' dan sesuaikan isinya:
+#
+# storePassword=password_keystore_anda
+# keyPassword=password_alias_anda
+# keyAlias=upload
+# storeFile=/Users/username/upload-keystore.jks

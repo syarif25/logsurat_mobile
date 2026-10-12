@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/api_endpoints.dart';
@@ -23,7 +23,9 @@ class ArsipService extends GetxService {
       }
       return [];
     } catch (e) {
-      print('GET ARSIP ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('GET ARSIP ERROR: $e');
+      }
       return [];
     }
   }

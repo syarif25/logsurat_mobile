@@ -1,9 +1,9 @@
 class ApiEndpoints {
   // TODO: Update base URL for production or different environment
-  // For Android emulator testing local Laravel: 'http://10.0.2.2:8000/api'
-  // For iOS simulator testing local Laravel: 'http://127.0.0.1:8000/api'
-  // For physical device: 'http://<your_ip>:8000/api'
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  // For Android emulator testing local Laravel: 'http://10.0.2.2:9000/api'
+  // For iOS simulator testing local Laravel: 'http://127.0.0.1:9000/api'
+  // For physical device: 'http://<your_ip>:9000/api'
+  static const String baseUrl = 'https://arsipsurat.p2s3.com/api';
 
   // Auth
   static const String login = '$baseUrl/auth/login';

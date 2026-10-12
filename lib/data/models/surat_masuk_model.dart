@@ -14,7 +14,7 @@ class SuratMasukModel {
   factory SuratMasukModel.fromJson(Map<String, dynamic> json) {
     return SuratMasukModel(
       nomorPengajuan: json['nomor_pengajuan']?.toString() ?? '',
-      namaLembaga: json['lembaga']?['nama_lembaga']?.toString() ?? '',
+      namaLembaga: json['lembaga']?['name']?.toString() ?? '',
       perihal: json['perihal']?.toString() ?? '',
       tglMasuk: json['tgl_masuk']?.toString() ?? '',
     );

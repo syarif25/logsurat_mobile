@@ -31,9 +31,9 @@ class DashboardController extends GetxController {
     isLoadingStats.value = false;
   }
 
-  Future<void> fetchSuratList() async {
+  Future<void> fetchSuratList({String? posisi}) async {
     isLoadingSurat.value = true;
-    final data = await _suratMasukService.getSuratMasuk(page: 1, perPage: 10);
+    final data = await _suratMasukService.getSuratMasuk(page: 1, perPage: 10, posisi: posisi);
     suratList.assignAll(data);
     isLoadingSurat.value = false;
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
@@ -45,14 +46,18 @@ class AuthService extends GetxService {
       }
       return "Format respons dari server tidak valid.";
     } on DioException catch (e) {
-      print('LOGIN ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('LOGIN ERROR: $e');
+      }
       if (e.response != null) {
         return e.response?.data['message'] ?? "Server error: ${e.response?.statusCode}";
       } else {
-        return "Gagal koneksi ke server. (Cek IP Anda: 10.0.2.2 untuk emulator)";
+        return "Gagal koneksi ke server. (Cek koneksi internet Anda)";
       }
     } catch (e) {
-      print('LOGIN ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('LOGIN ERROR: $e');
+      }
       return "Terjadi kesalahan internal: $e";
     } finally {
       isLoading.value = false;

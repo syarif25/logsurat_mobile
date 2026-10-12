@@ -1,4 +1,7 @@
+import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'core/theme.dart';
 import 'features/auth/splash_screen.dart';
@@ -10,7 +13,76 @@ import 'data/services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Get.putAsync(() => AuthService().init());
+
+  // 1. Kunci orientasi ke Portrait agar layout stabil
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // 2. Sesuaikan gaya System UI (Status Bar Transparan & Bersih)
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+
+  // 3. Global Error Handler & Fallback Widget (Mencegah Grey Screen)
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    if (kDebugMode) {
+      debugPrint('Caught Flutter Error: ${details.exceptionAsString()}');
+    }
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (kDebugMode) {
+      debugPrint('Caught Platform Error: $error');
+    }
+    return true; // Mencegah crash fatal
+  };
+
+  // Tampilan cadangan jika terjadi rendering error di release
+  ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    return Material(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
+              SizedBox(height: 12),
+              Text(
+                'Terjadi Kendala Tampilan',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              SizedBox(height: 6),
+              Text(
+                'Silakan muat ulang halaman atau buka kembali aplikasi.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  };
+
+  // 4. Inisialisasi Service dengan Pengaman (Defensive Initialization)
+  try {
+    await Get.putAsync(() => AuthService().init());
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('Gagal inisialisasi AuthService: $e');
+    }
+  }
+
   runApp(const MyApp());
 }
 
@@ -20,8 +92,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'LogSurat Mobile',
+      title: 'LogSurat',
       theme: AppTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       initialRoute: '/splash',
       getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
@@ -36,9 +109,12 @@ class MyApp extends StatelessWidget {
           page: () => ArsipScreen(),
           transition: Transition.rightToLeft,
         ),
-        GetPage(name: '/tracking', page: () => const TrackingScreen()),
+        GetPage(
+          name: '/tracking',
+          page: () => const TrackingScreen(),
+          transition: Transition.rightToLeft,
+        ),
       ],
-      debugShowCheckedModeBanner: false,
     );
   }
 }

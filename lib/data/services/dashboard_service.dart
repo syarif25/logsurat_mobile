@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';
 import '../models/dashboard_stats_model.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/api_endpoints.dart';

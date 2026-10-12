@@ -1,4 +1,4 @@
-package com.example.logsurat_mobile
+package com.p2s3.logsurat
 
 import io.flutter.embedding.android.FlutterActivity
 
