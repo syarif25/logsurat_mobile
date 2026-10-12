@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dashboard_controller.dart';
+import '../navigation/main_nav_controller.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class DashboardScreen extends StatelessWidget {
@@ -171,7 +172,13 @@ class DashboardScreen extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16),
-                    onTap: () => Get.toNamed('/arsip'),
+                    onTap: () {
+                      if (Get.isRegistered<MainNavController>()) {
+                        Get.find<MainNavController>().changePage(0);
+                      } else {
+                        Get.toNamed('/arsip');
+                      }
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                       child: Row(

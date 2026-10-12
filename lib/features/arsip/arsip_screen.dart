@@ -5,7 +5,8 @@ import '../../data/models/surat_model.dart';
 import 'arsip_controller.dart';
 
 class ArsipScreen extends StatelessWidget {
-  ArsipScreen({super.key});
+  final bool isTab;
+  ArsipScreen({super.key, this.isTab = false});
 
   final ArsipController controller = Get.put(ArsipController());
 
@@ -14,6 +15,7 @@ class ArsipScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F4F6),
       appBar: AppBar(
+        automaticallyImplyLeading: !isTab,
         title: const Text('Arsip Surat', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,

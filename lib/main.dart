@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'core/theme.dart';
 import 'features/auth/splash_screen.dart';
 import 'features/auth/login_screen.dart';
-import 'features/dashboard/dashboard_screen.dart';
+import 'features/navigation/main_nav_screen.dart';
 import 'features/arsip/arsip_screen.dart';
 import 'features/arsip/tracking_screen.dart';
 import 'data/services/auth_service.dart';
@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(
           name: '/dashboard',
-          page: () => DashboardScreen(),
+          page: () => const MainNavigationScreen(),
           transition: Transition.fadeIn,
         ),
         GetPage(

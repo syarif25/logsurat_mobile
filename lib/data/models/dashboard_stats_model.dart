@@ -33,17 +33,33 @@ class RekapBulanModel {
 class DashboardStatsModel {
   final Map<String, int> posisiSurat;
   final List<RekapBulanModel> rekapBulan;
+  final Map<String, int> summary;
+  final Map<String, dynamic> chartTrenBulanan;
 
   DashboardStatsModel({
     required this.posisiSurat,
     required this.rekapBulan,
+    this.summary = const {},
+    this.chartTrenBulanan = const {},
   });
 
   factory DashboardStatsModel.fromJson(Map<String, dynamic> json) {
     Map<String, int> posisi = {};
     List<RekapBulanModel> rekapList = [];
+    Map<String, int> summaryMap = {};
+    Map<String, dynamic> trenMap = {};
 
     if (json['data'] != null) {
+      if (json['data']['summary'] != null) {
+        (json['data']['summary'] as Map).forEach((k, v) {
+          summaryMap[k.toString()] = (v is num) ? v.toInt() : 0;
+        });
+      }
+
+      if (json['data']['chart_tren_bulanan'] != null) {
+        trenMap = Map<String, dynamic>.from(json['data']['chart_tren_bulanan']);
+      }
+
       if (json['data']['chart_posisi_surat'] != null) {
         final labels = List<String>.from(json['data']['chart_posisi_surat']['labels'] ?? []);
         final values = List<int>.from(json['data']['chart_posisi_surat']['values'] ?? []);
@@ -64,6 +80,8 @@ class DashboardStatsModel {
     return DashboardStatsModel(
       posisiSurat: posisi,
       rekapBulan: rekapList,
+      summary: summaryMap,
+      chartTrenBulanan: trenMap,
     );
   }
 }
