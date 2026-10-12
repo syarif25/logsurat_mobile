@@ -18,8 +18,10 @@ class MainNavigationScreen extends StatelessWidget {
       RekapScreen(),
     ];
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Obx(
         () => IndexedStack(
           index: navCtrl.currentIndex.value,
@@ -31,13 +33,16 @@ class MainNavigationScreen extends StatelessWidget {
   }
 
   Widget _buildBottomBar(BuildContext context, MainNavController navCtrl) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -53,6 +58,7 @@ class MainNavigationScreen extends StatelessWidget {
             children: [
               // Menu 1: Arsip
               _buildNavItem(
+                context: context,
                 index: 0,
                 icon: Icons.folder_outlined,
                 activeIcon: Icons.folder_rounded,
@@ -62,6 +68,7 @@ class MainNavigationScreen extends StatelessWidget {
 
               // Menu 2: Beranda (Tombol Timbul Lingkaran di Tengah)
               _buildCenterNavItem(
+                context: context,
                 index: 1,
                 icon: Icons.home_rounded,
                 label: 'Beranda',
@@ -70,6 +77,7 @@ class MainNavigationScreen extends StatelessWidget {
 
               // Menu 3: Rekap
               _buildNavItem(
+                context: context,
                 index: 2,
                 icon: Icons.bar_chart_rounded,
                 activeIcon: Icons.insert_chart_rounded,
@@ -84,16 +92,19 @@ class MainNavigationScreen extends StatelessWidget {
   }
 
   Widget _buildNavItem({
+    required BuildContext context,
     required int index,
     required IconData icon,
     required IconData activeIcon,
     required String label,
     required MainNavController navCtrl,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E);
+    final inactiveColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF9CA3AF);
+
     return Obx(() {
       final isSelected = navCtrl.currentIndex.value == index;
-      const activeColor = Color(0xFF0F766E);
-      const inactiveColor = Color(0xFF9CA3AF);
 
       return InkWell(
         onTap: () => navCtrl.changePage(index),
@@ -126,11 +137,17 @@ class MainNavigationScreen extends StatelessWidget {
   }
 
   Widget _buildCenterNavItem({
+    required BuildContext context,
     required int index,
     required IconData icon,
     required String label,
     required MainNavController navCtrl,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeColor = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E);
+    final inactiveColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280);
+
     return Obx(() {
       final isSelected = navCtrl.currentIndex.value == index;
 
@@ -161,7 +178,7 @@ class MainNavigationScreen extends StatelessWidget {
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.white,
+                    color: theme.cardColor,
                     width: 3.5,
                   ),
                 ),
@@ -179,7 +196,7 @@ class MainNavigationScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isSelected ? const Color(0xFF0F766E) : const Color(0xFF6B7280),
+                  color: isSelected ? activeColor : inactiveColor,
                 ),
               ),
             ),

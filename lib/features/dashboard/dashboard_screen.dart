@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dashboard_controller.dart';
 import '../navigation/main_nav_controller.dart';
+import '../../core/services/theme_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class DashboardScreen extends StatelessWidget {
@@ -11,8 +12,11 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6), // Light greyish blue background
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -23,13 +27,54 @@ class DashboardScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu, color: Color(0xFF374151)),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.logout, color: Color(0xFF374151)),
-                    onPressed: () => controller.logout(),
+                  Obx(() {
+                    final isDarkMode = Get.isRegistered<ThemeService>()
+                        ? Get.find<ThemeService>().isDarkMode.value
+                        : isDark;
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: isDarkMode ? const Color(0xFF1E293B) : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                          color: isDarkMode ? const Color(0xFFFBBF24) : const Color(0xFF374151),
+                          size: 20,
+                        ),
+                        tooltip: isDarkMode ? 'Mode Terang' : 'Mode Gelap',
+                        onPressed: () {
+                          if (Get.isRegistered<ThemeService>()) {
+                            Get.find<ThemeService>().toggleTheme();
+                          }
+                        },
+                      ),
+                    );
+                  }),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.logout_rounded, color: Color(0xFFEF4444), size: 20),
+                      tooltip: 'Keluar',
+                      onPressed: () => controller.logout(),
+                    ),
                   ),
                 ],
               ),
@@ -44,8 +89,8 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         controller.authService.currentUser.value?.name ?? 'Logsurat',
-                        style: const TextStyle(
-                          color: Color(0xFF111827),
+                        style: TextStyle(
+                          color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
@@ -53,8 +98,8 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         controller.authService.currentUser.value?.jabatan ?? 'Kantor Bendahara',
-                        style: const TextStyle(
-                          color: Color(0xFF9CA3AF),
+                        style: TextStyle(
+                          color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF9CA3AF),
                           fontSize: 14,
                         ),
                       ),
@@ -97,7 +142,7 @@ class DashboardScreen extends StatelessWidget {
                           'Posisi Surat Saat Ini',
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF111827),
+                            color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                           ),
                         ),
                         Container(
@@ -342,15 +387,17 @@ class DashboardScreen extends StatelessWidget {
     String title,
     List<Map<String, dynamic>> details,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: isDark ? const Color(0xFF334155) : Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -363,14 +410,14 @@ class DashboardScreen extends StatelessWidget {
         child: ExpansionTile(
           title: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: Color(0xFF111827),
+              color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
               fontSize: 16,
             ),
           ),
-          iconColor: const Color(0xFF0F766E),
-          collapsedIconColor: const Color(0xFF111827),
+          iconColor: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E),
+          collapsedIconColor: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
           childrenPadding: const EdgeInsets.only(
             left: 16,
             right: 16,
@@ -385,15 +432,15 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Text(
                       detail['jenis'],
-                      style: const TextStyle(
-                        color: Color(0xFF374151),
+                      style: TextStyle(
+                        color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF374151),
                         fontSize: 15,
                       ),
                     ),
                     Text(
                       detail['jumlah'].toString(),
-                      style: const TextStyle(
-                        color: Color(0xFF0F766E),
+                      style: TextStyle(
+                        color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E),
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
@@ -402,24 +449,24 @@ class DashboardScreen extends StatelessWidget {
                 ),
               );
             }),
-            const Divider(color: Color(0xFFE5E7EB)),
+            Divider(color: isDark ? const Color(0xFF334155) : const Color(0xFFE5E7EB)),
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Total',
                     style: TextStyle(
-                      color: Color(0xFF111827),
+                      color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),
                   ),
                   Text(
                     details.fold<int>(0, (sum, item) => sum + (item['jumlah'] as int)).toString(),
-                    style: const TextStyle(
-                      color: Color(0xFF111827),
+                    style: TextStyle(
+                      color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),
@@ -435,11 +482,13 @@ class DashboardScreen extends StatelessWidget {
 
   void _showDetailModal(BuildContext context, String title) {
     controller.fetchSuratList(posisi: title); // Fetch data when modal opens
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           insetPadding: const EdgeInsets.all(16),
           child: Container(
@@ -455,10 +504,10 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Detail: $title',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF374151),
+                          color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF374151),
                         ),
                       ),
                     ),
@@ -468,7 +517,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Divider(),
+                Divider(color: isDark ? const Color(0xFF334155) : const Color(0xFFE5E7EB)),
                 Flexible(
                   child: Obx(() {
                     if (controller.isLoadingSurat.value) {
@@ -476,15 +525,20 @@ class DashboardScreen extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: CircularProgressIndicator(),
-                        )
+                        ),
                       );
                     }
                     if (controller.suratList.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(32.0),
-                          child: Text('Tidak ada berkas.'),
-                        )
+                          padding: const EdgeInsets.all(32.0),
+                          child: Text(
+                            'Tidak ada berkas.',
+                            style: TextStyle(
+                              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
+                            ),
+                          ),
+                        ),
                       );
                     }
                     return ListView.builder(
@@ -496,12 +550,13 @@ class DashboardScreen extends StatelessWidget {
                         final timeAgoStr = timeago.format(date, locale: 'id');
                         
                         return _buildMobileListItem(
+                          context,
                           item.nomorPengajuan, 
                           item.namaLembaga, 
                           item.perihal, 
                           '${date.day}/${date.month}/${date.year}', 
                           timeAgoStr.toUpperCase(), 
-                          Colors.blue
+                          Colors.blue,
                         );
                       },
                     );
@@ -523,17 +578,19 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileListItem(String no, String lembaga, String perihal, String tgl, String waktu, MaterialColor badgeColor) {
+  Widget _buildMobileListItem(BuildContext context, String no, String lembaga, String perihal, String tgl, String waktu, MaterialColor badgeColor) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
+        color: isDark ? const Color(0xFF0F172A) : Colors.white,
+        border: Border.all(color: isDark ? const Color(0xFF334155) : Colors.grey.shade200),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -551,19 +608,19 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Text(
                       no,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF6B7280),
+                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       lembaga.isEmpty ? '-' : lembaga,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Color(0xFF111827),
+                        color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                       ),
                     ),
                   ],
@@ -572,14 +629,14 @@ class DashboardScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: badgeColor.shade50,
+                  color: isDark ? badgeColor.withValues(alpha: 0.2) : badgeColor.shade50,
                   borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: badgeColor.shade200),
+                  border: Border.all(color: isDark ? badgeColor.withValues(alpha: 0.4) : badgeColor.shade200),
                 ),
                 child: Text(
                   waktu,
                   style: TextStyle(
-                    color: badgeColor.shade700,
+                    color: isDark ? badgeColor.shade200 : badgeColor.shade700,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
@@ -590,21 +647,21 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             perihal,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Color(0xFF4B5563),
+              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF4B5563),
             ),
           ),
           const SizedBox(height: 8),
           Row(
             children: [
-              const Icon(Icons.calendar_today, size: 12, color: Color(0xFF9CA3AF)),
+              Icon(Icons.calendar_today, size: 12, color: isDark ? const Color(0xFF64748B) : const Color(0xFF9CA3AF)),
               const SizedBox(width: 4),
               Text(
                 tgl,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: Color(0xFF6B7280),
+                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
                 ),
               ),
             ],

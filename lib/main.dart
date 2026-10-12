@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'core/theme.dart';
+import 'core/services/theme_service.dart';
 import 'features/auth/splash_screen.dart';
 import 'features/auth/login_screen.dart';
 import 'features/navigation/main_nav_screen.dart';
@@ -77,9 +78,10 @@ void main() async {
   // 4. Inisialisasi Service dengan Pengaman (Defensive Initialization)
   try {
     await Get.putAsync(() => AuthService().init());
+    await Get.putAsync(() => ThemeService().init());
   } catch (e) {
     if (kDebugMode) {
-      debugPrint('Gagal inisialisasi AuthService: $e');
+      debugPrint('Gagal inisialisasi Service: $e');
     }
   }
 
@@ -91,12 +93,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'LogSurat',
-      theme: AppTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/splash',
-      getPages: [
+    final themeService = Get.find<ThemeService>();
+
+    return Obx(
+      () => GetMaterialApp(
+        title: 'LogSurat',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: themeService.themeMode,
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/splash',
+        getPages: [
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(
@@ -115,6 +122,6 @@ class MyApp extends StatelessWidget {
           transition: Transition.rightToLeft,
         ),
       ],
-    );
+    ));
   }
 }

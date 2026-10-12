@@ -9,18 +9,21 @@ class RekapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Rekapitulasi Surat',
           style: TextStyle(
-            color: Color(0xFF111827),
+            color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
@@ -67,21 +70,23 @@ class RekapScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildSummaryCard(
+                        context,
                         'Total Surat',
                         '${summary['total_surat'] ?? 0}',
                         Icons.mark_email_read_outlined,
-                        const Color(0xFF0F766E),
-                        const Color(0xFFE6FFFA),
+                        isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E),
+                        isDark ? const Color(0xFF2DD4BF).withValues(alpha: 0.15) : const Color(0xFFE6FFFA),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildSummaryCard(
+                        context,
                         'Belum Diproses',
                         '${summary['belum_diproses'] ?? 0}',
                         Icons.hourglass_empty_rounded,
                         const Color(0xFFF59E0B),
-                        const Color(0xFFFEF3C7),
+                        isDark ? const Color(0xFFF59E0B).withValues(alpha: 0.15) : const Color(0xFFFEF3C7),
                       ),
                     ),
                   ],
@@ -91,21 +96,23 @@ class RekapScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildSummaryCard(
+                        context,
                         'Sedang Diproses',
                         '${summary['sedang_diproses'] ?? 0}',
                         Icons.sync_rounded,
                         const Color(0xFF3B82F6),
-                        const Color(0xFFDBEAFE),
+                        isDark ? const Color(0xFF3B82F6).withValues(alpha: 0.15) : const Color(0xFFDBEAFE),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildSummaryCard(
+                        context,
                         'Selesai',
                         '${summary['selesai'] ?? 0}',
                         Icons.check_circle_outline_rounded,
                         const Color(0xFF10B981),
-                        const Color(0xFFD1FAE5),
+                        isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFD1FAE5),
                       ),
                     ),
                   ],
@@ -115,23 +122,24 @@ class RekapScreen extends StatelessWidget {
 
                 // Tren Bulanan Chart Card
                 if (trendLabels.isNotEmpty && trendValues.isNotEmpty) ...[
-                  const Text(
+                  Text(
                     'Tren Surat 6 Bulan Terakhir',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Color(0xFF111827),
+                      color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                     ),
                   ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(16),
+                      border: isDark ? Border.all(color: const Color(0xFF334155)) : null,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.04),
+                          color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -158,10 +166,10 @@ class RekapScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     '$val',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF4B5563),
+                                      color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF4B5563),
                                     ),
                                   ),
                                   const SizedBox(height: 6),
@@ -170,17 +178,19 @@ class RekapScreen extends StatelessWidget {
                                     height: barHeight < 8 ? 8 : barHeight,
                                     decoration: BoxDecoration(
                                       color: i == trendLabels.length - 1
-                                          ? const Color(0xFF0F766E)
-                                          : const Color(0xFF14B8A6).withValues(alpha: 0.5),
+                                          ? (isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E))
+                                          : (isDark
+                                              ? const Color(0xFF14B8A6).withValues(alpha: 0.35)
+                                              : const Color(0xFF14B8A6).withValues(alpha: 0.5)),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
                                     trendLabels[i].toString().substring(0, 3),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 11,
-                                      color: Color(0xFF6B7280),
+                                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
                                     ),
                                   ),
                                 ],
@@ -195,12 +205,12 @@ class RekapScreen extends StatelessWidget {
                 ],
 
                 // Rekapitulasi per Bulan Accordions
-                const Text(
+                Text(
                   'Rincian Rekap per Bulan',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Color(0xFF111827),
+                    color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -209,7 +219,7 @@ class RekapScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.cardColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Center(child: Text('Belum ada rincian rekap bulan.')),
@@ -226,11 +236,12 @@ class RekapScreen extends StatelessWidget {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: theme.cardColor,
                         borderRadius: BorderRadius.circular(16),
+                        border: isDark ? Border.all(color: const Color(0xFF334155)) : null,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.03),
+                            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -243,22 +254,24 @@ class RekapScreen extends StatelessWidget {
                           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                           title: Text(
                             bulanTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
-                              color: Color(0xFF1F2937),
+                              color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF1F2937),
                             ),
                           ),
                           trailing: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0F766E).withValues(alpha: 0.1),
+                              color: isDark
+                                  ? const Color(0xFF2DD4BF).withValues(alpha: 0.15)
+                                  : const Color(0xFF0F766E).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               '$totalBulan Berkas',
-                              style: const TextStyle(
-                                color: Color(0xFF0F766E),
+                              style: TextStyle(
+                                color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                               ),
@@ -269,7 +282,10 @@ class RekapScreen extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                               child: Column(
                                 children: [
-                                  const Divider(color: Color(0xFFF3F4F6), height: 16),
+                                  Divider(
+                                    color: isDark ? const Color(0xFF334155) : const Color(0xFFF3F4F6),
+                                    height: 16,
+                                  ),
                                   ...details.map((detail) {
                                     final jenis = detail.jenis;
                                     final jumlah = detail.jumlah;
@@ -285,18 +301,18 @@ class RekapScreen extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   jenis,
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     fontSize: 14,
-                                                    color: Color(0xFF4B5563),
+                                                    color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF4B5563),
                                                   ),
                                                 ),
                                               ),
                                               Text(
                                                 '$jumlah berkas',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
-                                                  color: Color(0xFF111827),
+                                                  color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                                                 ),
                                               ),
                                             ],
@@ -307,10 +323,10 @@ class RekapScreen extends StatelessWidget {
                                             child: LinearProgressIndicator(
                                               value: ratio,
                                               minHeight: 5,
-                                              backgroundColor: Colors.grey.shade100,
+                                              backgroundColor: isDark ? const Color(0xFF334155) : Colors.grey.shade100,
                                               valueColor: AlwaysStoppedAnimation<Color>(
                                                 ratio > 0.3
-                                                    ? const Color(0xFF0F766E)
+                                                    ? (isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0F766E))
                                                     : const Color(0xFF14B8A6),
                                               ),
                                             ),
@@ -337,15 +353,26 @@ class RekapScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCard(String title, String count, IconData icon, Color color, Color bgColor) {
+  Widget _buildSummaryCard(
+    BuildContext context,
+    String title,
+    String count,
+    IconData icon,
+    Color color,
+    Color bgColor,
+  ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
+        border: isDark ? Border.all(color: const Color(0xFF334155)) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -379,9 +406,9 @@ class RekapScreen extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF6B7280),
+                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
